@@ -2,9 +2,13 @@
  * ConsoleIO Hilfsklasse, nicht in Aufgabenstellung enthalten
  * @author Julius Herpich
  */
+
+#ifndef CONSOLEIO_H
+#define CONSOLEIO_H
+
 #include <windows.h>
 
-#include <cstdlib>
+//#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -12,8 +16,6 @@
 #define ESC "\x1b"
 #define CSI "\x1b["
 #define OSC "\x1b]"
-
-using namespace std;
 
 struct SGR_char
 { // char using virtual terminal formating
@@ -30,8 +32,8 @@ struct SGR_char
     }
 };
 
-typedef vector<SGR_char> SGRRow;
-typedef vector<SGRRow> SGRMatrix;
+typedef std::vector<SGR_char> SGRRow;
+typedef std::vector<SGRRow> SGRMatrix;
 
 class ConsoleIO
 {
@@ -62,14 +64,14 @@ public:
   {
     hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hOut == INVALID_HANDLE_VALUE)
-      throw runtime_error("Couldn't get console handle");
+      throw std::runtime_error("Couldn't get console handle");
 
     if (!GetConsoleMode(hOut, &dwMode))
-      throw runtime_error("Couldn't get console mode");
+      throw std::runtime_error("Couldn't get console mode");
 
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     if (!SetConsoleMode(hOut, dwMode))
-      throw runtime_error("Couldn't enable virtual terminal processing");
+      throw std::runtime_error("Couldn't enable virtual terminal processing");
 
     SetConsoleWindowInfo(hOut, TRUE, &windowSize);
     SetConsoleScreenBufferSize(hOut, {(short)(windowSize.Right + 1), (short)(windowSize.Bottom + 1)});
@@ -148,7 +150,7 @@ public:
   {
     printf(CSI "%d;%dH", printOrigin.Y + 1, printOrigin.X + 1);
     printf(CSI "%sm", format);
-    printf("%s", string);
+    std::cout << string;
     clearFormating();
   }
 
@@ -197,12 +199,12 @@ public:
       printf(CSI "K");                              // clear the line
       printf("%s ", message);
       scanf("%s", &inputChar);
-    } while (string(allowed).find(inputChar) == string::npos);
+    } while (std::string(allowed).find(inputChar) == std::string::npos);
     clearFormating();
     return inputChar;
   }
 
-  char *getString(const char *const message, char *inputString, const string &allowed)
+  char *getString(const char *const message, char *inputString, const std::string &allowed)
   {
     printf(CSI "4m"); // underline
     do
@@ -211,8 +213,10 @@ public:
       printf(CSI "K");                              // clear the line
       printf("%s ", message);
       scanf("%s", inputString);
-    } while (allowed.find(inputString) == string::npos);
+    } while (allowed.find(inputString) == std::string::npos);
     clearFormating();
     return inputString;
   }
 };
+
+#endif // CONSOLEIO_H
