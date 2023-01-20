@@ -11,7 +11,7 @@ int height, width, inputInt = 0;
 char inputChar = '\0';
 std::string inputStr = "";
 
-COORD consoleSize = {MAX_X_INDEX + 25, MAX_Y_INDEX + 5};
+COORD consoleSize = {MAX_X_INDEX + 30, MAX_Y_INDEX + 5};
 
 void refresh(ConsoleIO &cio, CapycitySim &ccs)
 {
@@ -78,24 +78,23 @@ void printBuildingInfo(ConsoleIO &cio, CapycitySim &ccs)
 {
     cio.clearWindow();
     cio.printAtFormat<const char *const>("Building Info:", {0, 0}, "1;4");
-    cio.printAtFormat<const char *const>("Type:", {0, 1}, "4");
-    cio.printAtFormat<const char *const>("Label:", {6, 1}, "4");
+    cio.printAtFormat<const char *const>("Label:", {2, 1}, "4");
     cio.printAtFormat<const char *const>("Materials:", {13, 1}, "4");
-    cio.printAtFormat<const char *const>("Price:", {MAX_X_INDEX + 15, 1}, "4");
+    cio.printAtFormat<const char *const>("Price:", {MAX_X_INDEX + 25, 1}, "4");
 
     int total = 0;
 
     for (int i = 0; i < ccs.buildings.size(); i++)
     {   
-        std::cout << CSI << i+3 << ";" << 3 << "H";
+        std::cout << CSI << i+3 << ";" << 1 << "H";
         cio.printSGR(ccs.buildings.at(i).displayChar);
         cio.clearFormatting();
-        cio.printAtFormat<std::string>(ccs.buildings.at(i).label, {6, (short)(i+2)}, "");
+        cio.printAtFormat<std::string>(ccs.buildings.at(i).label, {2, (short)(i+2)}, "");
         cio.printAtFormat<std::string>(ccs.buildings.at(i).matsString(), {12, (short)(i+2)}, "");
-        cio.printAtFormat<int>(ccs.buildings.at(i).totalCost(), {MAX_X_INDEX + 15, (short)(i+2)}, "");
+        cio.printAtFormat<int>(ccs.buildings.at(i).totalCost(), {MAX_X_INDEX + 25, (short)(i+2)}, "");
         total += ccs.buildings.at(i).totalCost();
     }
-    cio.printAtFormat<int>(total, {MAX_X_INDEX + 15, (short)(ccs.buildings.size()+2)}, "1;4");
+    cio.printAtFormat<int>(total, {MAX_X_INDEX + 25, (short)(ccs.buildings.size()+2)}, "1;4");
     
     cio.getStr("Input any:", inputStr);
     return;
@@ -110,7 +109,8 @@ int main(void)
     }
     catch (std::runtime_error &e)
     {
-        printf("%s", e.what());
+        std::cout << e.what() << std::endl;
+        std::cout << "Consult README.md";
         exit(1);
     }
 

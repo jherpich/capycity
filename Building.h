@@ -28,7 +28,7 @@ Plastic plastic;
 class Building
 {
 protected:
-    std::vector<Material *> materials;
+    std::map<Material *, int> materials;
 
 public:
     int size;
@@ -50,23 +50,29 @@ public:
 
     std::string matsString()
     {
-        std::string mats = "";
-        for (short i = 0; i < materials.size(); i++)
+        std::string outStr = " ";
+        std::map<Material *, int>::iterator it;
+
+        for (it = materials.begin(); it != materials.end(); it++)
         {
-            mats.append(" ");
-            mats.append(materials.at(i)->name);
+            outStr.append(it->first->name); // string (key)
+            outStr.append(": ");
+            outStr.append(std::to_string(it->second)); // string's value
+            outStr.append(" ");
         }
-        return mats;
+        return outStr;
     }
 
     int totalCost()
     {
-        int cost = 0;
-        for (short i = 0; i < materials.size(); i++)
+        int total = baseCost;
+        std::map<Material *, int>::iterator it;
+
+        for (it = materials.begin(); it != materials.end(); it++)
         {
-            cost += (materials.at(i)->cost);
+            total += it->first->cost*it->second;
         }
-        return cost;
+        return total;
     }
 };
 
@@ -87,7 +93,7 @@ class Hydro : public Building
 public:
     Hydro(int size, std::string label) : Building(size, 100, label, {'H', 'B', (char *)"37;44"}, false) // blue ASCII H
     {
-        materials = {&wood, &metal};
+        materials = {{&wood, 2}, {&metal, 1}};
     };
     ~Hydro() = default;
 };
@@ -97,7 +103,7 @@ class Solar : public Building
 public:
     Solar(int size, std::string label) : Building(size, 250, label, {'S', 'B', (char *)"30;43"}, false) // yellow ASCII S
     {
-        materials = {&metal, &metal, &plastic};
+        materials = {{&metal, 2}, {&plastic, 1}};
     };
     ~Solar() = default;
 };
@@ -107,7 +113,7 @@ class Wind : public Building
 public:
     Wind(int size, std::string label) : Building(size, 500, label, {'W', 'B', (char *)"30;47"}, false) // white ASCII W
     {
-        materials = {&wood, &metal, &plastic};
+        materials = {{&wood, 1}, {&metal, 3}, {&plastic, 2}};
     };
     ~Wind() = default;
 };
