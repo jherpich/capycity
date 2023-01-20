@@ -61,7 +61,7 @@ public:
 
     int totalCost()
     {
-        int cost = 0;
+        int cost = baseCost;
         for (short i = 0; i < materials.size(); i++)
         {
             cost += (materials.at(i)->cost);

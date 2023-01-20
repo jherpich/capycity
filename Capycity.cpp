@@ -11,7 +11,7 @@ int height, width, inputInt = 0;
 char inputChar = '\0';
 std::string inputStr = "";
 
-COORD consoleSize = {MAX_X_INDEX + 25, MAX_Y_INDEX + 5};
+COORD consoleSize = {MAX_X_INDEX + 30, MAX_Y_INDEX + 5};
 
 void refresh(ConsoleIO &cio, CapycitySim &ccs)
 {
