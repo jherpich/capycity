@@ -35,10 +35,10 @@ ConsoleIO cio(consoleSize.X, consoleSize.Y);
 void refresh()
 {
     cio.clearWindow();
-    cio.printAtFormatString("Blueprint:", {0, 0}, "1");
+    cio.printAtFormat<char>("Blueprint:", {0, 0}, "1");
     cio.printAt(matrix, {MATRIX_Y_ORIGIN, MATRIX_X_ORIGIN});
 
-    cio.printAtFormatString("Controls:", {MAX_X_INDEX + 5, 0}, "1;4");
+    cio.printAtFormat<char>("Controls:", {MAX_X_INDEX + 5, 0}, "1;4");
 }
 
 void setBuilding()
@@ -48,11 +48,11 @@ void setBuilding()
 
     SGR_char c;
 
-    cio.printAtFormatString("> Set:", {MAX_X_INDEX + 5, 1}, "4");
-    cio.printAtFormatString("1: Hydro Station", {MAX_X_INDEX + 5, 2}, "34");
-    cio.printAtFormatString("2: Solar Panel", {MAX_X_INDEX + 5, 3}, "33");
-    cio.printAtFormatString("3: Wind Turbine", {MAX_X_INDEX + 5, 4}, "");
-    cio.printAtFormatString("0: Cancel", {MAX_X_INDEX + 5, 5}, "91");
+    cio.printAtFormat<char>("> Set:", {MAX_X_INDEX + 5, 1}, "4");
+    cio.printAtFormat<char>("1: Hydro Station", {MAX_X_INDEX + 5, 2}, "34");
+    cio.printAtFormat<char>("2: Solar Panel", {MAX_X_INDEX + 5, 3}, "33");
+    cio.printAtFormat<char>("3: Wind Turbine", {MAX_X_INDEX + 5, 4}, "");
+    cio.printAtFormat<char>("0: Cancel", {MAX_X_INDEX + 5, 5}, "91");
 
     do
     {
@@ -85,7 +85,7 @@ void setBuilding()
                 if (matrix[row][col] != buildingLookup[MapTile::EMPTY])
                 {
                     cio.printInfoLine("Building collided!");
-                    cio.printAtFormatString("X", {(short)(row + MATRIX_Y_ORIGIN), (short)(col + MATRIX_X_ORIGIN)}, "101");
+                    cio.printAtFormat<char>("X", {(short)(row + MATRIX_Y_ORIGIN), (short)(col + MATRIX_X_ORIGIN)}, "101");
                     placeable = false;
                 }
     } while (!placeable);
@@ -99,7 +99,7 @@ void clearBuilding()
 {
     int start_x, end_x, start_y, end_y = 0;
 
-    cio.printAtFormatString("> Clear:", {MAX_X_INDEX + 5, 1}, "4");
+    cio.printAtFormat<char>("> Clear:", {MAX_X_INDEX + 5, 1}, "4");
 
     cio.getInt("Start X:", start_x, 0, width);
     cio.getInt("Start Y:", start_y, 0, height);
@@ -125,7 +125,7 @@ int main(void)
     }
 
     cio.toggleAlternateBuffer();
-    cio.printAtFormatString("Capycity", {(short)(consoleSize.X / 2 - 4), 2}, "1;4;91;107");
+    cio.printAtFormat<char>("Capycity", {(short)(consoleSize.X / 2 - 4), 2}, "1;4;91;107");
 
     cio.getInt("Max Index X:", width, 0, MAX_X_INDEX, true);
     cio.getInt("Max Index Y:", height, 0, MAX_Y_INDEX, true);
@@ -146,9 +146,9 @@ int main(void)
     while (true)
     {
         refresh();
-        cio.printAtFormatString("1: Set building", {MAX_X_INDEX + 5, 1}, "92");
-        cio.printAtFormatString("2: Clear area", {MAX_X_INDEX + 5, 2}, "91");
-        cio.printAtFormatString("0: Exit", {MAX_X_INDEX + 5, 3}, "");
+        cio.printAtFormat<char>("1: Set building", {MAX_X_INDEX + 5, 1}, "92");
+        cio.printAtFormat<char>("2: Clear area", {MAX_X_INDEX + 5, 2}, "91");
+        cio.printAtFormat<char>("0: Exit", {MAX_X_INDEX + 5, 3}, "");
 
         cio.getInt("Operation:", inputInt, 0, 2);
         refresh();

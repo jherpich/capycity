@@ -8,7 +8,7 @@
 
 #include <windows.h>
 
-//#include <cstdlib>
+// #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -21,15 +21,17 @@ struct SGR_char
 { // char using virtual terminal formating
   char c;
   char charset;
-  char* format;
+  char *format;
 
-  bool operator==(SGR_char const & rhs) const {
-      return ((this->c == rhs.c) && (this->charset == rhs.charset) && (this->format == rhs.format));
-    }
-  
-  bool operator!=(SGR_char const & rhs) const {
-      return ((this->c != rhs.c) || (this->charset != rhs.charset) || (this->format != rhs.format));
-    }
+  bool operator==(SGR_char const &rhs) const
+  {
+    return ((this->c == rhs.c) && (this->charset == rhs.charset) && (this->format == rhs.format));
+  }
+
+  bool operator!=(SGR_char const &rhs) const
+  {
+    return ((this->c != rhs.c) || (this->charset != rhs.charset) || (this->format != rhs.format));
+  }
 };
 
 typedef std::vector<SGR_char> SGRRow;
@@ -90,44 +92,29 @@ public:
   {
     if (!currentBufferState)
     {
-      printf(CSI "?1049h"); // enter Buffer
-      printf(CSI "2J");     // clear screen
+      std::cout << CSI "?1049h"; // enter Buffer
+      std::cout << CSI "2J";     // clear screen
     }
     else
     {
-      printf(CSI "?1049l"); // exit Buffer
+      std::cout << CSI "?1049l"; // exit Buffer
     }
+    std::cout.flush();
     currentBufferState = !currentBufferState;
     return currentBufferState;
   }
 
-  void clearWindow()
-  {
-    printf(CSI "0m");                       // clear leftover formatting
-    printf(CSI "2J");                       // Clear screen
-    printf(CSI "%d;1H", windowSize.Bottom); // go to last row
-    printf(ESC "(B");                       // set charset to ASCII 7-bit
-  }
-
   void clearFormating()
   {
-    printf(CSI "0m");                       // clear leftover formatting
-    printf(CSI "%d;1H", windowSize.Bottom); // go to last row
-    printf(ESC "(B");                       // set charset to ASCII 7-bit
+    std::cout << CSI "0m";                          // clear leftover formatting
+    std::cout << CSI << windowSize.Bottom << ";1H"; // go to last row
+    std::cout << ESC "(B";                          // set charset to ASCII 7-bit
+    std::cout.flush();
   }
 
-  void print(const SGRMatrix &matrix)
+  void clearWindow()
   {
-    for (short row = 0; row < matrix.size(); ++row)
-    { // Iterate Rows
-      for (short col = 0; col < matrix.at(row).size(); ++col)
-      { // Iterate Columns In Row
-        printf(CSI "%i;%iH", row + 1, col + 1);
-        printf(ESC "(%c", matrix.at(row).at(col).charset);
-        printf(CSI "%sm", matrix.at(row).at(col).format);
-        printf("%c", matrix.at(row).at(col).c);
-      }
-    }
+    std::cout << CSI "2J"; // Clear screen
     clearFormating();
   }
 
@@ -137,54 +124,61 @@ public:
     { // Iterate Rows
       for (short col = 0; col < matrix.at(row).size(); ++col)
       { // Iterate Columns In Row
-        printf(CSI "%i;%iH", (row + printOrigin.Y) + 1, (col + printOrigin.X) + 1);
-        printf(ESC "(%c", matrix.at(row).at(col).charset);
-        printf(CSI "%sm", matrix.at(row).at(col).format);
-        printf("%c", matrix.at(row).at(col).c);
+        std::cout << CSI << (row + printOrigin.Y + 1) << ";" << (col + printOrigin.X + 1) << "H";
+        std::cout << ESC "(" << matrix.at(row).at(col).charset;
+        std::cout << CSI << matrix.at(row).at(col).format << "m";
+        std::cout << matrix.at(row).at(col).c;
       }
     }
+    std::cout.flush();
     clearFormating();
   }
 
-  void printAtFormatString(const char *string, const COORD &printOrigin, const char *format = "")
+  template <typename T>
+  void printAtFormat(const T *const print, const COORD &printOrigin, const char *format = "")
   {
-    printf(CSI "%d;%dH", printOrigin.Y + 1, printOrigin.X + 1);
-    printf(CSI "%sm", format);
-    std::cout << string;
+    std::cout << CSI << (printOrigin.Y + 1) << ";" << (printOrigin.X + 1) << "H";
+    std::cout << CSI << format << "m";
+    std::cout << print;
+    std::cout.flush();
     clearFormating();
   }
 
-  void printInfoLine(const char *const message)
+  template <typename T>
+  void printInfoLine(const T *const message)
   {
-    printf(CSI "34m");                            // blue
-    printf(CSI "%d;1H", (windowSize.Bottom) - 1); // move cursor to row windowSize.Bottom, pos 1 (= start of second to last row)
-    printf(CSI "K");                              // clear the line
-    printf("%s", message);
+    std::cout << CSI "34m";                               // blue
+    std::cout << CSI << (windowSize.Bottom - 1) << ";1H"; // move cursor to row windowSize.Bottom -1, pos 1 (= start of second to last row)
+    std::cout << CSI "K";                                 // clear the line
+    std::cout << message;
+    std::cout.flush();
     clearFormating();
   }
 
   int getInt(const char *const message, int &inputInt, int min = INT_MIN, int max = INT_MAX, bool hint = false)
   {
-    printf(CSI "4m"); // underline
+    std::cout << CSI "4m"; // underline
     if (hint)
     {
-      printf(CSI "%d;1H", (windowSize.Bottom) - 1);
-      printf(CSI "K");
-      printf("(Min: %i | Max: %i)", min, max);
+      std::cout << CSI << (windowSize.Bottom - 1) << ";1H"; // move cursor
+      std::cout << CSI "K";
+      std::cout << "(Min: " << min << " | Max: " << max << ")";
+      std::cout.flush();
     }
     do
     {
-
-      printf(CSI "%d;1H", windowSize.Bottom); // move cursor to row windowSize.Bottom, pos 1 (= start of second to last row)
-      printf(CSI "K");                              // clear the line
-      printf("%s ", message);
-      scanf("%i", &inputInt);
+      std::cout << CSI << (windowSize.Bottom) << ";1H"; // move cursor
+      std::cout << CSI "K";                             // clear the line
+      std::cout << message;
+      std::cout.flush();
+      std::cin >> inputInt;
     } while (inputInt < min || inputInt > max);
     if (hint)
     {
-      printf(CSI "%d;1H", (windowSize.Bottom) - 1); // clear hints
-      printf(CSI "0m");                             // underline
-      printf(CSI "K");
+      std::cout << CSI << (windowSize.Bottom - 1) << ";1H"; // move cursor
+      std::cout << CSI "0m";                                // underline
+      std::cout << CSI "K";
+      std::cout.flush();
     }
     clearFormating();
     return inputInt;
@@ -192,31 +186,19 @@ public:
 
   char getChar(const char *const message, char &inputChar, const char *allowed)
   {
-    printf(CSI "4m"); // underline
+    std::cout << CSI "4m"; // underline
     do
     {
-      printf(CSI "%d;1H", windowSize.Bottom); // move cursor to row windowSize.Bottom, pos 1 (= start of second to last row)
-      printf(CSI "K");                              // clear the line
-      printf("%s ", message);
-      scanf("%s", &inputChar);
+      std::cout << CSI << (windowSize.Bottom) << ";1H"; // move cursor
+      std::cout << CSI "K";                             // clear the line
+      std::cout << message;
+      std::cout.flush();
+      std::cin >> inputChar;
     } while (std::string(allowed).find(inputChar) == std::string::npos);
     clearFormating();
     return inputChar;
   }
 
-  char *getString(const char *const message, char *inputString, const std::string &allowed)
-  {
-    printf(CSI "4m"); // underline
-    do
-    {
-      printf(CSI "%d;1H", windowSize.Bottom); // move cursor to row windowSize.Bottom, pos 1 (= start of second to last row)
-      printf(CSI "K");                              // clear the line
-      printf("%s ", message);
-      scanf("%s", inputString);
-    } while (allowed.find(inputString) == std::string::npos);
-    clearFormating();
-    return inputString;
-  }
 };
 
 #endif // CONSOLEIO_H

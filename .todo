@@ -1,0 +1,47 @@
+DONE: Kapitel 1
+DONE: Erhalt der Höhe und Breite des Baubereichs als Argument über die Kommandozeile.
+DONE: Erstellung eines Arrays, welches den Baubereich repräsentiert.
+     DONE: Elemente sollen dabei ein Enum sein, welcher den Gebäudetypen darstellt
+     DONE: (bzw. ein Feld als leer darstellt, wenn sich auf einer Position kein Gebäude befindet)
+DONE: Anzeige eines Menüs mit folgenden Einträgen und dahinterstehender Funktionalität
+     DONE: Gebäude setzen (mit darauffolgender Nachfrage nach Art, Höhe, Breite und Position)
+     DONE: Bereich löschen (Betroffene Gebäude sollen nicht gelöscht, sondern dadurch nur verkleinert werden)
+     DONE: Ausgeben des aktuellen Bauplans
+     DONE: Beenden des Programms
+DONE: Prüfung ob Teile eines zu bauenden Gebäudes mit anderen Gebäuden kollidiert oder außerhalb des Baubereichs liegt.
+
+TODO: Kapitel 2 
+TODO: Kapsel die Verwaltung der Gebäude innerhalb einer Klasse namens CapycitySim
+TODO: Erstelle eine Klasse für Materialien.
+     TODO: Es soll Holz, Metall, Kunststoff geben
+     TODO: Alle leiten sich von der Basisklasse Material ab
+     TODO: Jedes Material soll einen eigenen Preis besitzen
+TODO: Ersetze die Enum der Gebäude durch eigenständige Klassen für die einzelnen Gebäude.
+     TODO: Diese sollen sich von einer Basisklasse Building ableiten.Jedes Gebäude soll einen Grundpreis besitzen
+     TODO: Jedes Gebäude soll ein Label besitzen, welches beim Ausdrucken des Plans angezeigt wird
+     TODO: Jedes Gebäude soll eine Liste in Form eines Arrays oder Vektors haben, welche benötigte Materialien enthält.
+     TODO: Mehr Materialien einer Art benötigen mehr Plätze (z.B. 2xHolz -> [Holz,Holz] bei einem Array)
+TODO: Erweitere das Ausdrucken des Plans um die Darstellung der Gebäude mit 
+     TODO: ihren Labels
+     TODO: einer Auflistung der Gebäude sowie deren benötigter Materialien, dem Einzelpreis eines Gebäudes sowie dem Gesamtpreis von allen Gebäuden.
+
+TODO: Kapitel 3
+TODO: Überarbeite die Verwaltung der benötigten Materialien von Gebäuden
+     TODO: Realisiere dafür Carlas Idee (Verwaltung innerhalb der Gebäude) oder Bobs Idee (Verwaltung über zusätzliche Verwaltungsklasse)
+     TODO: Nutze Maps für die Verwaltung
+     TODO: Zur eindeutigen und konsistenten Identifizierung muss die Klasse als Key verwendet werden
+TODO: Gib an für welche Idee du dich entschieden hast und warum
+
+TODO: Kapitel 4
+TODO: Ergänze die Building Klassen um folgendes:
+     TODO: Methode zur Berechnung und Rückgabe des Preises
+     TODO: Erweiterung um die Eigenschaft Leistung, welche auch über eine Methode zurückgegeben werden kann
+TODO: Erstelle eine Klasse Blueprint
+     TODO: Die Klasse enthält die Daten und Funktionen eines Plans, welche sich zuvor in der Klasse CapycitySim befanden.
+     TODO: Erstelle eine Methode, um die Kennzahl des Plans zu berechnen und zurückzugeben.
+     TODO: Erweitere die Klasse um einen Funktor, der prüft, ob der Plan mit einem anderen Plan identisch ist
+TODO: Erweitere die Klasse CapycitySim
+     TODO: um eine geeignete Datenstruktur, zur Speicherung mehrerer Pläne.
+     TODO: um einen Menüeintrag, zur Erstellung eines neuen Plans
+     TODO: um eine Prüfung des aktuellen Plans, ob es bereits einen identischen gibt, um den Plan in dem Fall zu löschen. Diese Prüfung soll bei der Erstellung eines neuen Plans auf den noch aktuellen Plan angewendet werden.
+TODO: um ein Ausdrucken aller Pläne, absteigend sortiert nach der Kennzahl. Die Sortieren soll mithilfe einer Lambda-Funktion immer unmittelbar vor dem Ausdrucken durchgeführt werden.
