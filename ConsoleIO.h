@@ -6,36 +6,12 @@
 #ifndef CONSOLEIO_H
 #define CONSOLEIO_H
 
-#include <windows.h>
-
-// #include <cstdlib>
-#include <iostream>
-#include <string>
-#include <stdexcept>
+#include "includes.h"
+#include "Building.h"
 
 #define ESC "\x1b"
 #define CSI "\x1b["
 #define OSC "\x1b]"
-
-struct SGR_char
-{ // char using virtual terminal formating
-  char c;
-  char charset;
-  char *format;
-
-  bool operator==(SGR_char const &rhs) const
-  {
-    return ((this->c == rhs.c) && (this->charset == rhs.charset) && (this->format == rhs.format));
-  }
-
-  bool operator!=(SGR_char const &rhs) const
-  {
-    return ((this->c != rhs.c) || (this->charset != rhs.charset) || (this->format != rhs.format));
-  }
-};
-
-typedef std::vector<SGR_char> SGRRow;
-typedef std::vector<SGRRow> SGRMatrix;
 
 class ConsoleIO
 {
@@ -104,7 +80,7 @@ public:
     return currentBufferState;
   }
 
-  void clearFormating()
+  void clearFormatting()
   {
     std::cout << CSI "0m";                          // clear leftover formatting
     std::cout << CSI << windowSize.Bottom << ";1H"; // go to last row
@@ -115,44 +91,65 @@ public:
   void clearWindow()
   {
     std::cout << CSI "2J"; // Clear screen
-    clearFormating();
+    clearFormatting();
   }
 
-  void printAt(const SGRMatrix &matrix, const COORD &printOrigin)
+  void printSGR(SGR_char &sgr)
   {
-    for (short row = 0; row < matrix.size(); ++row)
+    std::cout << ESC "(" << sgr.charset;
+    std::cout << CSI << sgr.format << "m";
+    std::cout << sgr.c;
+  }
+
+  void printAt(const Blueprint &blueprint, const COORD &printOrigin)
+  {
+    for (short row = 0; row < blueprint.size(); ++row)
     { // Iterate Rows
-      for (short col = 0; col < matrix.at(row).size(); ++col)
+      for (short col = 0; col < blueprint.at(row).size(); ++col)
       { // Iterate Columns In Row
         std::cout << CSI << (row + printOrigin.Y + 1) << ";" << (col + printOrigin.X + 1) << "H";
-        std::cout << ESC "(" << matrix.at(row).at(col).charset;
-        std::cout << CSI << matrix.at(row).at(col).format << "m";
-        std::cout << matrix.at(row).at(col).c;
+        printSGR(blueprint.at(row).at(col)->displayChar);
       }
+      std::cout.flush();
+      clearFormatting();
     }
-    std::cout.flush();
-    clearFormating();
   }
 
   template <typename T>
-  void printAtFormat(const T *const print, const COORD &printOrigin, const char *format = "")
+  void printAtFormat(T print, const COORD &printOrigin, const char *format = "")
   {
     std::cout << CSI << (printOrigin.Y + 1) << ";" << (printOrigin.X + 1) << "H";
     std::cout << CSI << format << "m";
     std::cout << print;
     std::cout.flush();
-    clearFormating();
+    clearFormatting();
   }
 
   template <typename T>
-  void printInfoLine(const T *const message)
+  void printRectFormat(T print, const SMALL_RECT &printArea, const char *format = "")
+  {
+    for (short row = printArea.Top; row <= printArea.Bottom; ++row)
+    { // Iterate Rows
+      for (short col = printArea.Left; col <= printArea.Right; ++col)
+      { // Iterate Columns In Row
+        std::cout << CSI << (row + 1) << ";" << (col + 1) << "H";
+        std::cout << CSI << format << "m";
+        std::cout << print;
+      }
+      std::cout.flush();
+      clearFormatting();
+    }
+  }
+
+  template <typename T>
+  void printInfoLine(T message)
   {
     std::cout << CSI "34m";                               // blue
     std::cout << CSI << (windowSize.Bottom - 1) << ";1H"; // move cursor to row windowSize.Bottom -1, pos 1 (= start of second to last row)
     std::cout << CSI "K";                                 // clear the line
     std::cout << message;
     std::cout.flush();
-    clearFormating();
+    clearFormatting();
   }
 
   int getInt(const char *const message, int &inputInt, int min = INT_MIN, int max = INT_MAX, bool hint = false)
@@ -180,7 +177,7 @@ public:
       std::cout << CSI "K";
       std::cout.flush();
     }
-    clearFormating();
+    clearFormatting();
     return inputInt;
   }
 
@@ -195,10 +192,25 @@ public:
       std::cout.flush();
       std::cin >> inputChar;
     } while (std::string(allowed).find(inputChar) == std::string::npos);
-    clearFormating();
+    clearFormatting();
     return inputChar;
   }
 
+  std::string getStr(const char *const message, std::string &inputStr)
+  {
+    char c;
+    std::cout << CSI "4m";                            // underline
+    std::cout << CSI << (windowSize.Bottom) << ";1H"; // move cursor
+    std::cout << CSI "K";                             // clear the line
+    std::cout << message;
+    std::cout.flush();
+    
+    std::cin >> std::ws;
+    std::getline (std::cin, inputStr);
+
+    clearFormatting();
+    return inputStr;
+  }
 };
 
 #endif // CONSOLEIO_H

@@ -10,20 +10,20 @@ DONE: Anzeige eines Menüs mit folgenden Einträgen und dahinterstehender Funkti
      DONE: Beenden des Programms
 DONE: Prüfung ob Teile eines zu bauenden Gebäudes mit anderen Gebäuden kollidiert oder außerhalb des Baubereichs liegt.
 
-TODO: Kapitel 2 
-TODO: Kapsel die Verwaltung der Gebäude innerhalb einer Klasse namens CapycitySim
-TODO: Erstelle eine Klasse für Materialien.
-     TODO: Es soll Holz, Metall, Kunststoff geben
-     TODO: Alle leiten sich von der Basisklasse Material ab
-     TODO: Jedes Material soll einen eigenen Preis besitzen
-TODO: Ersetze die Enum der Gebäude durch eigenständige Klassen für die einzelnen Gebäude.
-     TODO: Diese sollen sich von einer Basisklasse Building ableiten.Jedes Gebäude soll einen Grundpreis besitzen
-     TODO: Jedes Gebäude soll ein Label besitzen, welches beim Ausdrucken des Plans angezeigt wird
-     TODO: Jedes Gebäude soll eine Liste in Form eines Arrays oder Vektors haben, welche benötigte Materialien enthält.
-     TODO: Mehr Materialien einer Art benötigen mehr Plätze (z.B. 2xHolz -> [Holz,Holz] bei einem Array)
-TODO: Erweitere das Ausdrucken des Plans um die Darstellung der Gebäude mit 
-     TODO: ihren Labels
-     TODO: einer Auflistung der Gebäude sowie deren benötigter Materialien, dem Einzelpreis eines Gebäudes sowie dem Gesamtpreis von allen Gebäuden.
+DONE: Kapitel 2 
+DONE: Kapsel die Verwaltung der Gebäude innerhalb einer Klasse namens CapycitySim
+DONE: Erstelle eine Klasse für Materialien.
+     DONE: Es soll Holz, Metall, Kunststoff geben
+     DONE: Alle leiten sich von der Basisklasse Material ab
+     DONE: Jedes Material soll einen eigenen Preis besitzen
+DONE: Ersetze die Enum der Gebäude durch eigenständige Klassen für die einzelnen Gebäude.
+     DONE: Diese sollen sich von einer Basisklasse Building ableiten.Jedes Gebäude soll einen Grundpreis besitzen
+     DONE: Jedes Gebäude soll ein Label besitzen, welches beim Ausdrucken des Plans angezeigt wird
+     DONE: Jedes Gebäude soll eine Liste in Form eines Arrays oder Vektors haben, welche benötigte Materialien enthält.
+     DONE: Mehr Materialien einer Art benötigen mehr Plätze (z.B. 2xHolz -> [Holz,Holz] bei einem Array)
+DONE: Erweitere das Ausdrucken des Plans um die Darstellung der Gebäude mit 
+     DONE: ihren Labels
+     DONE: einer Auflistung der Gebäude sowie deren benötigter Materialien, dem Einzelpreis eines Gebäudes sowie dem Gesamtpreis von allen Gebäuden.
 
 TODO: Kapitel 3
 TODO: Überarbeite die Verwaltung der benötigten Materialien von Gebäuden
